@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>尊界汽车 · 科技豪华</title>
+    <style>
+        /* 全局重置与字体 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0b0c0e;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(30, 60, 120, 0.15) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(180, 130, 30, 0.08) 0%, transparent 40%),
+                repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.01) 0px, rgba(255, 255, 255, 0.01) 2px, transparent 2px, transparent 6px);
+            font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #eef3fc;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 科技感扫描线/网格背景 (全屏微动画) */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* ----- 装饰性光效元素 ----- */
+        .glow-pulse {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(10, 132, 255, 0.1) 0%, rgba(0, 60, 150, 0.02) 70%, transparent 100%);
+            top: -200px;
+            right: -150px;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .glow-pulse-left {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.06) 0%, transparent 70%);
+            bottom: -100px;
+            left: -100px;
+            filter: blur(90px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* ----- 头部区域 ----- */
+        .header {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(100, 180, 255, 0.2);
+            padding-bottom: 20px;
+            flex-wrap: wrap;
+            backdrop-filter: blur(8px);
+        }
+
+        .brand h1 {
+            font-size: 3.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff 0%, #b0d4ff 50%, #ffd966 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(0, 160, 255, 0.3);
+        }
+
+        .brand-sub {
+            display: flex;
+            gap: 24px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #8da6ce;
+        }
+
+        .tech-badge {
+            border: 1px solid #2a4c7a;
+            background: rgba(8, 28, 48, 0.6);
+            backdrop-filter: blur(12px);
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 400;
+            font-size: 0.9rem;
+            box-shadow: 0 0 15px rgba(0, 160, 255, 0.1);
+            color: #b8d4ff;
+        }
+
+        .tech-badge i {
+            color: #00c8ff;
+            margin-right: 8px;
+            font-style: normal;
+        }
+
+        /* 抖音话题标签 */
+        .topic-tag {
+            display: inline-block;
+            background: rgba(0, 150, 255, 0.1);
+            border: 1px solid #1e90ff;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #aad0ff;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ----- 主要内容卡片网格 ----- */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1.2fr 0.9fr;
+            gap: 28px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: rgba(6, 16, 28, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(60, 130, 220, 0.2);
+            border-radius: 32px;
+            padding: 28px 26px;
+            box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.6), 0 0 0 0.5px rgba(0, 200, 255, 0.1) inset;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 180, 255, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 30px 50px -15px #000000cc, 0 0 15px rgba(0, 160, 240, 0.2) inset;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 5px solid #2a9df4;
+            padding-left: 18px;
+            background: linear-gradient(90deg, rgba(42, 157, 244, 0.1) 0%, transparent 80%);
+        }
+
+        .card-title span {
+            font-size: 1rem;
+            color: #6fa3d9;
+            margin-left: auto;
+        }
+
+        .data-row {
+            display: flex;
+            margin-bottom: 18px;
+            border-bottom: 1px dashed #1e3a5f;
+            padding-bottom: 14px;
+        }
+
+        .data-label {
+            width: 100px;
+            font-weight: 400;
+            color: #8aa9d6;
+            letter-spacing: 0.5px;
+        }
+
+        .data-value {
+            flex: 1;
+            font-weight: 500;
+            color: #e1efff;
+        }
+
+        .highlight {
+            color: #ffd966;
+            font-weight: 600;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .feature-list li::before {
+            content: "▹";
+            color: #3db4ff;
+            font-size: 1.2rem;
+        }
+
+        /* 进度条/科技感状态条 */
+        .stats-bar {
+            margin-top: 25px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .stat-name {
+            width: 110px;
+            color: #b0caf5;
+        }
+
+        .bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #102433;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 0 12px;
+            box-shadow: inset 0 2px 5px #00000055;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #2a9df4, #7ec8ff, #b8a2ff);
+            box-shadow: 0 0 12px #1e90ff;
+            width: 0%;
+        }
+
+        .stat-percent {
+            min-width: 45px;
+            text-align: right;
+            font-weight: 600;
+            color: #cde2ff;
+        }
+
+        /* 车主圈层卡片 */
+        .circle-quote {
+            background: rgba(10, 30, 50, 0.5);
+            padding: 22px;
+            border-radius: 24px;
+            margin-top: 18px;
+            border: 1px solid #1f4a7a;
+        }
+
+        .circle-quote p {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 16px;
+            color: #d4e6ff;
+        }
+
+        .small-note {
+            color: #7f9fbf;
+            font-size: 0.9rem;
+        }
+
+        /* 抖音事件区块 */
+        .douyin-featured {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0 15px;
+        }
+
+        .dy-card {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0, 20, 40, 0.5);
+            backdrop-filter: blur(8px);
+            border: 1px solid #2e5a8c;
+            border-radius: 24px;
+            padding: 18px;
+        }
+
+        .dy-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 6px cyan);
+        }
+
+        .dy-title {
+            font-weight: 600;
+            color: #c6e2ff;
+        }
+
+        .dy-desc {
+            color: #b0c6dd;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        /* 底部个人信息 (科技感展示) */
+        .profile-section {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-card {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(25px);
+            border: 1px solid #1c5a9e;
+            border-radius: 60px;
+            padding: 18px 36px;
+            display: inline-flex;
+            align-items: center;
+            gap: 40px;
+            box-shadow: 0 15px 35px -10px #00000080, 0 0 30px #00336633;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .profile-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .name-icon {
+            width: 40px;
+            height: 40px;
+            background: #0f3a60;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #3fa2ff;
+            box-shadow: 0 0 15px #2a9df4;
+            font-weight: bold;
+            color: white;
+        }
+
+        .name-text {
+            font-size: 1.8rem;
+            font-weight: 300;
+            background: linear-gradient(135deg, #fff, #cbe5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .wechat-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(30, 80, 130, 0.4);
+            padding: 8px 24px;
+            border-radius: 50px;
+            border: 1px solid #2d9eff;
+        }
+
+        .wechat-badge span {
+            color: #e3f0ff;
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .copy-symbol {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .domain-hint {
+            font-size: 1rem;
+            color: #b4d0f0;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .domain-hint::before {
+            content: "🌐";
+            filter: drop-shadow(0 0 5px cyan);
+        }
+
+        /* 页脚 */
+        .footer-note {
+            margin-top: 30px;
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.8rem;
+            color: #9bb5da;
+        }
+
+        /* 响应式 */
+        @media (max-width: 800px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: start;
+                gap: 15px;
+            }
+            .profile-card {
+                border-radius: 30px;
+                gap: 20px;
+            }
+            .brand h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow-pulse"></div>
+    <div class="glow-pulse-left"></div>
+
+    <div class="container">
+        <!-- 头部：品牌 + 抖音华尊会标识 -->
+        <div class="header">
+            <div class="header-top">
+                <div class="brand">
+                    <h1>MAEXTRO·尊界</h1>
+                    <div class="brand-sub">
+                        <span>HUAWEI 鸿蒙智行</span>
+                        <span>|</span>
+                        <span>江淮汽车 · 联合打造</span>
+                    </div>
+                </div>
+                <div class="tech-badge">
+                    <i>✦</i> 尊界S800 · 科技豪华标杆
+                </div>
+            </div>
+            <!-- 华尊会展示 - 抖音车主圈层新生态 -->
+            <div style="display: flex; align-items: center; gap: 16px; margin-top: 22px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 6px;">
+                    <span class="topic-tag">#尊界S800</span>
+                    <span class="topic-tag" style="background: #9a6e1e20; border-color: #d4af37;">✨ 华尊会 · 圈层盛典</span>
+                    <span class="topic-tag">@尊界汽车·抖音</span>
+                </div>
+                <div style="margin-left: auto; color: #8ab3f0; font-size: 0.9rem;">
+                    <span>🚀 近日抖音热议：尊界华尊会 • 高净值圈层入场券</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 两列布局：左侧品牌信息+右侧科技/圈层 -->
+        <div class="grid-2col">
+            <!-- 左侧：尊界核心数据&华尊会氛围 -->
+            <div class="card">
+                <div class="card-title">
+                    华尊会·尊界⭕层生态
+                    <span>🔥 抖音热议</span>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">车主圈层</div>
+                    <div class="data-value"><span class="highlight">“华尊会”</span> 高端私享社群 · 企业家/非遗传人汇聚</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">近期热点</div>
+                    <div class="data-value">朱朱董事长 · 光电云锦星空顶，刷爆抖音，尊界文化定制新标杆[reference:0]</div>
+                </div>
+                <div class="data-row">
+                    <div class="data-label">圈层效应</div>
+                    <div class="data-value">“人传人”口碑裂变，大定突破15000台，NPS净推荐值>85[reference:1]</div>
+                </div>
+                
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-name">科技豪华指数</span>
+                        <div class="bar-bg"><div class="bar-fill" style="width: 97%;"></div></div>
+                        <span class="stat-percent">97%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-name">圈层渗透率</span>
+                        <div class="bar-bg"><div class="bar-fill" style="width: 88%;"></div></div>
+                        <span class="stat-percent">88%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-name">抖音声量</span>
+                        <div class="bar-bg"><div class="bar-fill" style="width: 94%;"></div></div>
+                        <span class="stat-percent">94%</span>
+                    </div>
+                </div>
+
+                <div class="circle-quote">
+                    <p>“尊界车主的华尊会，不只是一辆车，更是顶级社交货币。后座留香，圈子自燃——尚未提车就能进入高端局。”[reference:2]</p>
+                    <div class="small-note">—— 2025-2026尊界私宴 · 高净值圈层实证</div>
+                </div>
+            </div>
+
+            <!-- 右侧：科技内核+抖音热点 -->
+            <div class="card">
+                <div class="card-title">
+                    华为全栈科技 · 尊界S800
+                    <span>⚡ 途灵龙行</span>
+                </div>
+                <ul class="feature-list">
+                    <li>华为途灵龙行平台 · 120km/h爆胎稳定控制[reference:3]</li>
+                    <li>天使座主动安全防护 + 华为星河通信 · 卫星离车30米连接</li>
+                    <li>华为乾崑ADS 4 · WEWA架构，首发即标杆[reference:4]</li>
+                    <li>鸿蒙ALPS座舱2.0 · 车语系统2.0，六屏交互</li>
+                    <li>巨鲸电池平台2.0 · 6C超压增程，10.5分钟充10%-80%[reference:5]</li>
+                </ul>
+                <div style="margin-top: 24px; padding: 12px 0;">
+                    <span style="background: #001e3c; padding: 6px 14px; border-radius: 24px; border:1px solid #3d7eb9;">🎬 抖音达人：@朱朱董事长 耗时3个月，将非遗云锦织入尊界S800星空顶[reference:6]</span>
+                </div>
+                <!-- 抖音相关热词 -->
+                <div class="douyin-featured">
+                    <div class="dy-card">
+                        <div class="dy-icon">📱</div>
+                        <div class="dy-title">#尊界华尊会</div>
+                        <div class="dy-desc">近日抖音车主自发形成“华尊会”高端社群，尊界效应席卷超豪圈。</div>
+                    </div>
+                    <div class="dy-card">
+                        <div class="dy-icon">🌟</div>
+                        <div class="dy-title">#云锦星空顶</div>
+                        <div class="dy-desc">千年非遗 × 现代光电科技，朱朱董事长引爆抖音，重新定义定制豪华。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第三行：品牌使命+鸿蒙智行春晚足迹 -->
+        <div style="display: flex; gap: 24px; flex-wrap: wrap; margin: 24px 0 16px;">
+            <div style="flex: 2; min-width: 260px; background: rgba(4, 20, 36, 0.5); backdrop-filter: blur(12px); border-radius: 28px; padding: 24px; border: 1px solid #23558b;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: #cde1ff;">尊界·鸿蒙智行春晚三登台</h3>
+                <p style="color: #bed9ff;">2024龙年问界首秀，2025蛇年尊界定义科技豪华，2026马年五界品牌全系亮相央视春晚——为中国豪华车断代史立下坐标。[reference:7]</p>
+            </div>
+            <div style="flex: 1.2; background: rgba(0,0,0,0.2); backdrop-filter: blur(12px); border-radius: 28px; padding: 24px; border: 1px solid #c9a22740;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 2rem;">🎖️</span>
+                    <span style="font-weight: 500;">尊界S800 · 70.8万-101.8万<br>纯电/增程双动力[reference:8]</span>
+                </div>
+                <div style="margin-top: 16px; color: #e5d5a7;">月交付环比攀升 · 鸿蒙智行百万交付里程碑</div>
+            </div>
+        </div>
+
+        <!-- 底部个人信息：张健华 + 微信号 -->
+        <div class="profile-section">
+            <div class="profile-card">
+                <div class="profile-name">
+                    <div class="name-icon">👤</div>
+                    <div class="name-text">张健华</div>
+                </div>
+                <div style="width: 1px; height: 30px; background: #1e5b9e;"></div>
+                <div class="wechat-badge">
+                    <span>📱 微信号：ZHANG_JIANHUA_WX</span>
+                </div>
+                <div style="color: #b0caf5; font-size: 0.9rem; display: flex; gap: 5px;">
+                    <span>🔗 商务合作请联系</span>
+                </div>
+            </div>
+            <div class="domain-hint">
+                尊界品牌域 · 尊界/华尊会 ｜ 如需商务合作，微信搜索: ZHANG_JIANHUA_WX
+            </div>
+            <div class="footer-note">
+                ⚡ 华为鸿蒙智行 × 江淮尊界 · 科技重塑豪华 · 圈层即身份 ⚡<br>
+                © 2026 尊界品牌资讯 · 所有素材基于公开报道
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // 增加微交互：轻量科技感数字跳动(装饰)
+            console.log("✨ 尊界·华尊会 | 张健华 · 购域微信号: ZHANG_JIANHUA_WX");
+            // 可添加简单的动态文字效果，但保持静态页简洁
+            const nameElement = document.querySelector('.name-text');
+            if (nameElement) {
+                nameElement.setAttribute('data-text', '张健华');
+            }
+        })();
+    </script>
+    <!-- 确保微信复制友好 -->
+</body>
+</html>
