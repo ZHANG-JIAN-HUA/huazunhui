@@ -2,8 +2,9 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>尊界汽车 · 科技豪华</title>
+    <!-- 优化：移除 user-scalable=no，允许用户缩放，提升可访问性 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>尊界汽车 · 科技豪华 | huazunhui圈层</title>
     <style>
         /* 全局重置与字体 */
         * {
@@ -49,7 +50,7 @@
             z-index: 5;
         }
 
-        /* ----- 装饰性光效元素 ----- */
+        /* ----- 装饰性光效元素 (移动端隐藏优化) ----- */
         .glow-pulse {
             position: fixed;
             width: 600px;
@@ -74,6 +75,13 @@
             filter: blur(90px);
             pointer-events: none;
             z-index: 1;
+        }
+
+        /* 移动端隐藏装饰光晕，提升性能避免遮挡 */
+        @media (max-width: 600px) {
+            .glow-pulse, .glow-pulse-left {
+                display: none;
+            }
         }
 
         /* ----- 头部区域 ----- */
@@ -197,6 +205,7 @@
             font-weight: 400;
             color: #8aa9d6;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
 
         .data-value {
@@ -242,6 +251,7 @@
         .stat-name {
             width: 110px;
             color: #b0caf5;
+            flex-shrink: 0;
         }
 
         .bar-bg {
@@ -377,6 +387,7 @@
             color: transparent;
         }
 
+        /* 微信号卡片区域 - 增加点击复制交互 */
         .wechat-badge {
             display: flex;
             align-items: center;
@@ -385,6 +396,14 @@
             padding: 8px 24px;
             border-radius: 50px;
             border: 1px solid #2d9eff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .wechat-badge:active {
+            background: rgba(30, 120, 200, 0.6);
+            transform: scale(0.98);
         }
 
         .wechat-badge span {
@@ -397,6 +416,11 @@
         .copy-symbol {
             font-size: 1rem;
             opacity: 0.8;
+            transition: opacity 0.2s;
+        }
+
+        .wechat-badge:hover .copy-symbol {
+            opacity: 1;
         }
 
         .domain-hint {
@@ -422,10 +446,11 @@
             color: #9bb5da;
         }
 
-        /* 响应式 */
+        /* ========== 响应式优化：平板与手机 ========== */
         @media (max-width: 800px) {
             .grid-2col {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
             .header-top {
                 flex-direction: column;
@@ -435,9 +460,93 @@
             .profile-card {
                 border-radius: 30px;
                 gap: 20px;
+                padding: 16px 24px;
             }
             .brand h1 {
                 font-size: 2.5rem;
+            }
+            .card {
+                padding: 22px 18px;
+            }
+        }
+
+        /* 极小屏幕 (宽度 <= 480px) 进一步优化文字、间距、固定宽度 */
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .brand h1 {
+                font-size: 2rem;
+            }
+            .brand-sub {
+                gap: 12px;
+                letter-spacing: 2px;
+                font-size: 0.75rem;
+            }
+            .card-title {
+                font-size: 1.5rem;
+                padding-left: 12px;
+            }
+            .data-label {
+                width: 80px;
+                font-size: 0.85rem;
+            }
+            .stat-name {
+                width: 85px;
+                font-size: 0.85rem;
+            }
+            .bar-bg {
+                margin: 0 8px;
+            }
+            .stat-percent {
+                min-width: 40px;
+                font-size: 0.85rem;
+            }
+            .circle-quote p {
+                font-size: 1rem;
+            }
+            .profile-card {
+                gap: 12px;
+                padding: 12px 20px;
+                border-radius: 40px;
+            }
+            .name-text {
+                font-size: 1.4rem;
+            }
+            .wechat-badge span {
+                font-size: 1rem;
+            }
+            .wechat-badge {
+                padding: 6px 16px;
+            }
+            .domain-hint {
+                font-size: 0.8rem;
+                text-align: center;
+            }
+            .dy-card {
+                min-width: 160px;
+            }
+        }
+
+        /* 确保超小折叠屏内容不溢出 */
+        @media (max-width: 360px) {
+            .data-row {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .data-label {
+                width: auto;
+            }
+            .stat-item {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .stat-name {
+                width: auto;
+                min-width: 85px;
+            }
+            .bar-bg {
+                min-width: 120px;
             }
         }
     </style>
@@ -464,7 +573,7 @@
             </div>
             <!-- huazunhui展示 - 抖音车主圈层新生态 -->
             <div style="display: flex; align-items: center; gap: 16px; margin-top: 22px; flex-wrap: wrap;">
-                <div style="display: flex; gap: 6px;">
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
                     <span class="topic-tag">#尊界S800</span>
                     <span class="topic-tag" style="background: #9a6e1e20; border-color: #d4af37;">✨ huazunhui · 圈层盛典</span>
                     <span class="topic-tag">@尊界汽车·抖音</span>
@@ -567,7 +676,7 @@
             </div>
         </div>
 
-        <!-- 底部个人信息：张健华 + 微信号 -->
+        <!-- 底部个人信息：张健华 + 微信号（支持点击复制） -->
         <div class="profile-section">
             <div class="profile-card">
                 <div class="profile-name">
@@ -575,8 +684,10 @@
                     <div class="name-text">张健华</div>
                 </div>
                 <div style="width: 1px; height: 30px; background: #1e5b9e;"></div>
-                <div class="wechat-badge">
+                <!-- 增加复制交互区域，data属性存储纯微信号便于复制 -->
+                <div class="wechat-badge" id="wechatCopyBtn" data-wechat="ZHANG_JIANHUA_WX">
                     <span>📱 微信号：ZHANG_JIANHUA_WX</span>
+                    <span class="copy-symbol">📋</span>
                 </div>
                 <div style="color: #b0caf5; font-size: 0.9rem; display: flex; gap: 5px;">
                     <span>🔗 商务合作请联系</span>
@@ -594,15 +705,53 @@
 
     <script>
         (function() {
-            // 增加微交互：轻量科技感数字跳动(装饰)
-            console.log("✨ 尊界·huazunhui | 张健华 · 购域微信号: ZHANG_JIANHUA_WX");
-            // 可添加简单的动态文字效果，但保持静态页简洁
-            const nameElement = document.querySelector('.name-text');
-            if (nameElement) {
-                nameElement.setAttribute('data-text', '张健华');
+            // 控制台友好提示
+            console.log("✨ 尊界·huazunhui | 张健华 · 微信号: ZHANG_JIANHUA_WX (点击复制)");
+
+            // 实现微信号一键复制功能（移动端/PC通用）
+            const copyBtn = document.getElementById('wechatCopyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    // 获取微信号 (优先从 data-wechat 属性获取，确保准确)
+                    let wechatId = copyBtn.getAttribute('data-wechat');
+                    if (!wechatId) {
+                        // 降级: 从span文本中提取
+                        const spanText = copyBtn.querySelector('span')?.innerText || '';
+                        const match = spanText.match(/微信号[：:]\s*([A-Z0-9_]+)/i);
+                        wechatId = match ? match[1] : 'ZHANG_JIANHUA_WX';
+                    }
+                    
+                    try {
+                        // 现代 Clipboard API
+                        await navigator.clipboard.writeText(wechatId);
+                        // 提供友好的提示反馈
+                        const originalHTML = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<span>✅ 已复制微信号</span><span class="copy-symbol">✔️</span>';
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalHTML;
+                        }, 2000);
+                    } catch (err) {
+                        // 降级方案: 使用 textarea 复制
+                        const textarea = document.createElement('textarea');
+                        textarea.value = wechatId;
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        alert('微信号已复制: ' + wechatId);
+                    }
+                });
             }
+
+            // 可选: 增强移动端触感，为其他可能交互区域添加细微反馈
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    // 仅增加轻触反馈，无功能影响
+                });
+            });
         })();
     </script>
-    <!-- 确保微信复制友好 -->
 </body>
 </html>
